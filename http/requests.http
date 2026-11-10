@@ -1,0 +1,109 @@
+### Roteiro de testes do MoveSmart (cliente HTTP do IntelliJ). Rode de cima para baixo.
+### Variável da porta: 8085
+
+### 1. Health check (público)
+GET http://localhost:8085/health_check
+
+### 2. Login como ADMIN (usuário inicial criado automaticamente: admin / admin123)
+POST http://localhost:8085/login
+Content-Type: application/json
+
+{"login": "admin", "senha": "admin123"}
+
+> {% client.global.set("token", response.body.tokenJWT); %}
+
+### 3. Criar usuário comum (perfil USER)
+POST http://localhost:8085/usuarios
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"login": "ana", "senha": "ana123", "perfil": "USER"}
+
+### 4. Cadastrar linha (ADMIN)
+POST http://localhost:8085/linhas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"codigoSptrans": 40001, "letreiro": "8000-10", "sentido": 1, "terminalPrincipal": "TERMINAL A", "terminalSecundario": "TERMINAL B", "circular": false}
+
+### 5. Linha com código repetido -> 422
+POST http://localhost:8085/linhas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"codigoSptrans": 40001, "letreiro": "8000-10", "sentido": 1}
+
+### 6. Linha inválida -> 400
+POST http://localhost:8085/linhas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"codigoSptrans": 1, "letreiro": "", "sentido": 5}
+
+### 7. Listar linhas, com busca e paginação
+GET http://localhost:8085/linhas?busca=8000&page=0&size=5
+Authorization: Bearer {{token}}
+
+### 8. Detalhar linha 1
+GET http://localhost:8085/linhas/1
+Authorization: Bearer {{token}}
+
+### 9. Atualizar linha
+PUT http://localhost:8085/linhas
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"id": 1, "letreiro": "8000-21"}
+
+### 10. Relatar lotação (BAIXA, MEDIA ou ALTA)
+POST http://localhost:8085/linhas/1/lotacao
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"nivel": "ALTA"}
+
+### 11. Consultar lotação agregada (últimos 30 min)
+GET http://localhost:8085/linhas/1/lotacao
+Authorization: Bearer {{token}}
+
+### 12. Registrar estimativa de atraso do modelo de ML (ADMIN)
+POST http://localhost:8085/linhas/1/estimativa-atraso
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{"minutosEstimados": 7, "probabilidadeAtraso": 0.62, "modeloVersao": "rf-v1"}
+
+### 13. Consultar a estimativa mais recente
+GET http://localhost:8085/linhas/1/estimativa-atraso
+Authorization: Bearer {{token}}
+
+### 14. Favoritar, listar e remover favorito
+POST http://localhost:8085/favoritos/1
+Authorization: Bearer {{token}}
+
+###
+GET http://localhost:8085/favoritos
+Authorization: Bearer {{token}}
+
+###
+DELETE http://localhost:8085/favoritos/1
+Authorization: Bearer {{token}}
+
+### 15. SPTrans: buscar linhas reais (exige a variável de ambiente SPTRANS_TOKEN)
+POST http://localhost:8085/sptrans/linhas/sincronizar?termo=8000
+Authorization: Bearer {{token}}
+
+### 16. SPTrans: sincronizar previsões da linha (troque o 1 pelo id de uma linha sincronizada)
+POST http://localhost:8085/sptrans/linhas/1/previsoes/sincronizar
+Authorization: Bearer {{token}}
+
+### 17. Listar previsões guardadas (origem SPTRANS_OLHO_VIVO)
+GET http://localhost:8085/linhas/1/previsoes
+Authorization: Bearer {{token}}
+
+### 18. Excluir linha (exclusão lógica) -> 204
+DELETE http://localhost:8085/linhas/1
+Authorization: Bearer {{token}}
+
+### 19. Sem token -> 403
+GET http://localhost:8085/linhas
