@@ -2,24 +2,10 @@
 
 Global Solution FIAP 2026.2 · CitizenTech · Engenharia de Software (3º ano)
 
-## Ficha da CitizenTech
-
-| Campo | Conteúdo |
-|---|---|
-| Nome da CitizenTech | MoveSmart — Mobilidade Urbana Inteligente *(nome provisório)* |
-| Cidade e bairro | São Paulo — SP *(definir bairro/região do estudo de caso)* |
-| Cidadão beneficiado | Trabalhadores, estudantes e demais usuários do transporte público municipal |
-| Problema, em uma frase | Passageiros de ônibus em São Paulo enfrentam atrasos, superlotação e falta de informação confiável para planejar a viagem. |
-| Como funciona | O app consulta esta API, que traz previsões de chegada da SPTrans (Olho Vivo), agrega relatos de lotação dos passageiros e expõe as estimativas de atraso geradas pelo modelo de Machine Learning. |
-| O que cada parte faz | **SOA (este repositório):** API REST em Java. **C#:** backend de usuários/favoritos/relatos. **ML:** modelo de atraso com dados históricos reais. **Mobile:** app em Expo. **IoT:** simulação ESP32 de contagem de passageiros. **Cyber / OS / Testing:** conforme cada disciplina. |
-| Link do repositório | *(preencher)* |
-| Indicador de impacto | *(definir — ex.: % de consultas em que o passageiro evitou uma espera longa)* |
-| ODS conectados | ODS 9 (Indústria, Inovação e Infraestrutura) e ODS 11 (Cidades e Comunidades Sustentáveis) |
-
 ## Integrantes
 
-- *(nome / RM)*
-- *(nome / RM)*
+- Augusto Ferreira — RM 557709
+- Heitor Prestes — RM 554823
 
 ## Princípio central: separar os tipos de informação
 
@@ -89,17 +75,6 @@ Um roteiro pronto para testar tudo está em [`http/requests.http`](http/requests
 
 `200/201/204` sucesso · `400` dados inválidos · `403` sem token ou sem permissão · `404` não encontrado · `422` regra de negócio (ex.: linha duplicada) · `503` SPTrans indisponível ou token não configurado.
 
-## Como o projeto atende à avaliação (10,0 pontos)
-
-| Critério | Onde está |
-|---|---|
-| Estruturação do domínio (3,0) | `domain/` — entidades `Linha`, `Parada`, `PrevisaoChegada`, `RelatoLotacao`, `EstimativaAtraso`, `Favorito`, `Usuario`; DTOs (`Dados*`) com Bean Validation; regras no `service/` |
-| Conexão com banco de dados (3,0) | Spring Data JPA + MySQL; repositórios em `domain/*/…Repository` |
-| Migrações (1,5) | Flyway: `src/main/resources/db/migration` (V1 a V8) |
-| Documentação automática (1,5) | Swagger/OpenAPI em `/swagger-ui.html`, com `@Tag` e `@Operation` em todos os endpoints |
-| Testes automatizados (1,0) | `src/test` — veja abaixo |
-| Chamadas a APIs REST | `infra/externo/sptrans` consome a API Olho Vivo da SPTrans |
-
 ## Estrutura
 
 ```
@@ -135,5 +110,27 @@ Esses testes **não precisam de banco nem de internet** (a SPTrans é simulada).
 - Fontes de dados: API Olho Vivo (SPTrans) e dados históricos públicos usados no modelo de ML *(documentar fonte, link e período)*.
 
 ## Evidências da aplicação
+Algumas prints da aplicação funcionando
 
-*(inserir prints do Swagger, das chamadas funcionando, das tabelas no MySQL Workbench e do `./mvnw test` passando)*
+## **Tabelas criadas**
+
+<img width="837" height="777" alt="image" src="https://github.com/user-attachments/assets/3bedff15-5912-4189-b59d-d0e0af55a594" />
+
+## **Testes rodando**
+
+<img width="1227" height="625" alt="image" src="https://github.com/user-attachments/assets/8eda4466-fcbd-49c4-bbc3-d47a41a5b587" />
+
+## **Cadastrando Usuario**
+
+<img width="505" height="857" alt="image" src="https://github.com/user-attachments/assets/aa2f3614-c748-427b-934e-60b86069b277" />
+
+## **Cadastrando Linha**
+
+<img width="431" height="878" alt="image" src="https://github.com/user-attachments/assets/75e05307-dd4f-49b3-8a41-3882992b686b" />
+
+## **Detalhes da Linha**
+
+<img width="1080" height="806" alt="image" src="https://github.com/user-attachments/assets/1f5dd6d3-3074-473e-98fe-0a655e8256a9" />
+
+## **Relato de Linha lotada**
+<img width="1111" height="787" alt="image" src="https://github.com/user-attachments/assets/37ef1452-635e-4181-ba0b-22c6bacad9d6" />
